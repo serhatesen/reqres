@@ -12,15 +12,16 @@
                 dense
                 autofocus
                 color="#ffe59a"
-                label="UserName"
+                label="Email"
                 style="max-width: 30%"
                 class="mx-auto font-weight-bold"
-                v-model="username"
+                v-model="email"
             />
             <v-text-field
                 dense
                 color="#ffe59a"
                 label="Password"
+                type="password"
                 style="max-width: 30%"
                 class="mx-auto font-weight-bold"
                 v-model="password"
@@ -46,10 +47,40 @@
 
 <script>
 import loginBar from "@/components/bars/loginBar.vue";
+import axios from "axios";
+import {mapActions, mapGetters} from "vuex";
 export default {
   name: "LoginView",
   components:{
     loginBar
+  },
+  data: () => ({
+    email : "",
+    password: "",
+    accessToken: ""
+  }),
+  computed:{
+    ...mapGetters({
+      setAccessToken: 'login/getAccessToken',
+    })
+  },
+  methods:{
+    ...mapActions({
+      setAccessToken:'login/setAccessToken',
+    }),
+    login(){
+      const data = {
+        email : this.email,
+        password : this.password
+      };
+      axios.post('https://reqres.in/api/login', data)
+          .then((response) => {
+            console.log({user: response.data})
+            this.setAccessToken = response.data.token
+            this.$router.push({path: '/'})
+          })
+          .catch(err => console.log(err))
+    }
   }
 }
 </script>

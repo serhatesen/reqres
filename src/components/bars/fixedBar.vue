@@ -15,7 +15,7 @@
             Login
           </v-btn>
           <div v-if="getAccessToken">
-            Welcome {{getUser.firstName}} {{getUser.lastName}}
+            <span>Hoşgeldiniz</span>
           </div>
         </v-col>
       </v-row>
@@ -24,9 +24,23 @@
 </template>
 
 <script>
+import {mapActions, mapGetters} from "vuex";
 export default {
   name: "fixedBar",
+  data : () => ({
+    users : [],
+    accessToken:'',
+    user : ''
+  }),
+  computed:{
+    ...mapGetters({
+      setAccessToken:'login/getAccessToken',
+    })
+  },
   methods: {
+    ...mapActions({
+      setAccessToken: 'login/setAccessToken',
+    }),
     login() {
       this.$router.push("/login");
     }

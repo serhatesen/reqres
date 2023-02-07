@@ -14,7 +14,8 @@
               <v-col cols="12"></v-col>
               <v-col class=" text-center">
                 <dialog-detail
-                    :character ="users[i]"/>
+                    :character ="users[i]"
+                />
               </v-col>
             </v-row>
           </v-card>
