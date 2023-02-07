@@ -75,7 +75,6 @@ export default {
       };
       axios.post('https://reqres.in/api/login', data)
           .then((response) => {
-            console.log({user: response.data})
             this.setAccessToken = response.data.token
             this.$router.push({path: '/'})
           })
