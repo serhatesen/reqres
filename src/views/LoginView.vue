@@ -61,7 +61,7 @@ export default {
   }),
   computed:{
     ...mapGetters({
-      setAccessToken: 'login/getAccessToken',
+      getAccessToken: 'login/getAccessToken',
     })
   },
   methods:{
@@ -75,7 +75,7 @@ export default {
       };
       axios.post('https://reqres.in/api/login', data)
           .then((response) => {
-            this.setAccessToken = response.data.token
+            this.setAccessToken({accessToken: response.data.token})
             this.$router.push({path: '/'})
           })
           .catch(err => console.log(err))

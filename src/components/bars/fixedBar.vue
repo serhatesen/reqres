@@ -15,7 +15,10 @@
             Login
           </v-btn>
           <div v-if="getAccessToken">
-            <span>Hoşgeldiniz</span>
+            Welcome User!
+            <v-btn @click="logout">
+              Logout
+            </v-btn>
           </div>
         </v-col>
       </v-row>
@@ -27,14 +30,14 @@
 import {mapActions, mapGetters} from "vuex";
 export default {
   name: "fixedBar",
-  data : () => ({
-    users : [],
-    accessToken:'',
-    user : ''
+  data: () => ({
+    users: [],
+    accessToken: '',
+    user: ''
   }),
-  computed:{
+  computed: {
     ...mapGetters({
-      setAccessToken:'login/getAccessToken',
+      getAccessToken: 'login/getAccessToken',
     })
   },
   methods: {
@@ -43,8 +46,12 @@ export default {
     }),
     login() {
       this.$router.push("/login");
-    }
-  }
+    },
+    logout() {
+      this.setAccessToken({accessToken: ''})
+      this.$router.push({path: '/login'})
+    },
+  },
 }
 </script>
 

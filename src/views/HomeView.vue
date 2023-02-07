@@ -42,6 +42,7 @@
 import axios from "axios";
 import fixedBar from "@/components/bars/fixedBar.vue";
 import DialogDetail from "@/components/Home/dialogDetail.vue";
+import {mapGetters} from "vuex";
 
 export default {
   name: 'HomeView',
@@ -58,9 +59,15 @@ export default {
     DialogDetail,
     fixedBar
   },
+  computed: {
+    ...mapGetters({
+      getAccessToken: 'login/getAccessToken'
+    })
+  },
   created() {
     axios.get('https://reqres.in/api/users')
         .then((response) => {
+          this.beforeRouteEnter();
           this.users = response.data.data;
           this.pages =response.data
         })
@@ -75,7 +82,12 @@ export default {
             this.users = response.data.data;
             this.pages = response.data
           })
-    }
-  }
+    },
+    beforeRouteEnter() {
+      if (this.getAccessToken === null) {
+        this.$router.push({path: '/login'})
+      }
+    },
+  },
 }
 </script>
