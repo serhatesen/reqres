@@ -3,7 +3,7 @@
     <fixed-bar/>
     <v-container class="v-main mt-5" fluid style="max-width: 90%">
       <v-row>
-        <v-col cols="4" v-for="(user, i) in users" :key="user.id">
+        <v-col cols="4" v-for="(user, i) in getUserData" :key="user.id">
           <v-card class="mx-auto mt-5" width="300" height="400" color="blue-grey lighten-3">
             <v-row>
               <v-col cols="12"></v-col>
@@ -14,7 +14,7 @@
               <v-col cols="12"></v-col>
               <v-col class=" text-center">
                 <dialog-detail
-                    :character ="users[i]"
+                    :character ="getUserData[i]"
                 />
               </v-col>
             </v-row>
@@ -42,7 +42,7 @@
 import axios from "axios";
 import fixedBar from "@/components/bars/fixedBar.vue";
 import DialogDetail from "@/components/Home/dialogDetail.vue";
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: 'HomeView',
@@ -61,25 +61,18 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getAccessToken: 'login/getAccessToken'
+      getAccessToken: 'login/getAccessToken',
+      getUserData:'users/getUserData'
     })
   },
-  created() {
-    axios.get('https://reqres.in/api/users')
-        .then((response) => {
-          this.beforeRouteEnter();
-          this.users = response.data.data;
-          this.pages =response.data
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-  },
   methods:{
+    ...mapActions({
+      setUserData:'users/setUserData',
+    }),
     changePage(){
       axios.get(`https://reqres.in/api/users?page=${this.currentPage}`)
           .then((response)=>{
-            this.users = response.data.data;
+            this.setUserData({ users: response.data.data });
             this.pages = response.data
           })
     },
@@ -88,6 +81,17 @@ export default {
         this.$router.push({path: '/login'})
       }
     },
+  },
+  created() {
+    axios.get('https://reqres.in/api/users')
+        .then((response) => {
+          this.beforeRouteEnter();
+          this.setUserData({ users: response.data.data });
+          this.pages =response.data
+        })
+        .catch((err) => {
+          console.log(err)
+        })
   },
 }
 </script>
